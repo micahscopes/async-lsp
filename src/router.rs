@@ -198,6 +198,22 @@ where
         self.unhandled_event = Box::new(handler);
         self
     }
+
+    /// Returns `true` if this router has a handler for the given request.
+    pub fn handles_request(&self, request: &AnyRequest) -> bool {
+        self.req_handlers.contains_key(&request.method.as_str())
+    }
+
+    /// Returns `true` if this router has a handler for the given notification.
+    pub fn handles_notification(&self, notification: &AnyNotification) -> bool {
+        self.notif_handlers
+            .contains_key(&notification.method.as_str())
+    }
+
+    /// Returns `true` if this router has a handler for the given event.
+    pub fn handles_event(&self, event: &AnyEvent) -> bool {
+        self.event_handlers.contains_key(&event.inner_type_id())
+    }
 }
 
 impl<St, Error> Service<AnyRequest> for Router<St, Error> {
