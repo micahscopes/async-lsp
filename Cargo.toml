@@ -29,6 +29,8 @@ omni-trait = []
 stdio = ["dep:rustix", "rustix?/fs", "tokio?/net"]
 tracing = ["dep:tracing"]
 forward = []
+# steer = ["tower/steer"]
+# util = ["tower/util"]
 
 [[example]]
 name = "client_builder"
@@ -40,11 +42,23 @@ required-features = ["omni-trait", "tracing", "tokio"]
 
 [[example]]
 name = "server_builder"
-required-features = ["client-monitor", "omni-trait", "stdio", "tracing", "tokio"]
+required-features = [
+    "client-monitor",
+    "omni-trait",
+    "stdio",
+    "tracing",
+    "tokio",
+]
 
 [[example]]
 name = "server_trait"
-required-features = ["client-monitor", "omni-trait", "stdio", "tracing", "tokio"]
+required-features = [
+    "client-monitor",
+    "omni-trait",
+    "stdio",
+    "tracing",
+    "tokio",
+]
 
 [[example]]
 name = "inspector"
@@ -65,7 +79,10 @@ harness = false
 
 [dependencies]
 async-io = { version = "2", optional = true }
-futures = { version = "0.3.28", default-features = false, features = ["async-await", "std"] }
+futures = { version = "0.3.28", default-features = false, features = [
+    "async-await",
+    "std",
+] }
 # See: https://github.com/gluon-lang/lsp-types/issues/284
 lsp-types = "0.95.0"
 pin-project-lite = "0.2.9"
@@ -74,6 +91,10 @@ serde = { version = "1.0.159", features = ["derive"] }
 serde_json = "1.0.95"
 thiserror = "1.0.40"
 tokio = { version = "1.27.0", optional = true }
+tower = { version = "0.4.13", default-features = false, features = [
+    "steer",
+    "util",
+] }
 tower-layer = "0.3.2"
 tower-service = "0.3.2"
 tracing = { version = "0.1.37", optional = true }
@@ -85,11 +106,22 @@ async-process = "2"
 # Workaround: https://github.com/bheisler/criterion.rs/issues/702
 clap = { version = "4", default-features = false, features = ["help"] }
 criterion = { version = "0.5.1", features = ["async_tokio"] }
-tokio = { version = "1.27.0", features = ["io-std", "io-util", "macros", "process", "rt", "time"] }
+tokio = { version = "1.27.0", features = [
+    "io-std",
+    "io-util",
+    "macros",
+    "process",
+    "rt",
+    "time",
+] }
 tokio-util = { version = "0.7.8", features = ["compat"] }
 tower = "0.4.13"
 tracing-subscriber = "0.3.16"
-
+# MSRV fixes.
+# NB. These requirements are in dev-dependencies thus have no effect on downstream crates.
+anstyle = "1, <1.0.3" # 1.0.4 have MSRV 1.70
+clap_lex = "=0.5.0"   # 0.5.1 have MSRV 1.70
+regex = "1, <1.10"    # 1.10 have MSRV 1.65
 [profile.bench]
 debug = 1
 

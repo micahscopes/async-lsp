@@ -106,10 +106,15 @@ macro_rules! define_getters {
     };
 }
 
+pub mod can_handle;
 pub mod concurrency;
 pub mod panic;
 pub mod router;
 pub mod server;
+
+// #[cfg(feature = "steer")]
+pub mod steer;
+pub mod util;
 
 #[cfg(feature = "forward")]
 #[cfg_attr(docsrs, doc(cfg(feature = "forward")))]

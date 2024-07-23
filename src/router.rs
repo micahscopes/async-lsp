@@ -10,6 +10,7 @@ use lsp_types::notification::Notification;
 use lsp_types::request::Request;
 use tower_service::Service;
 
+use crate::can_handle::CanHandle;
 use crate::{
     AnyEvent, AnyNotification, AnyRequest, ErrorCode, JsonValue, LspService, ResponseError, Result,
 };
@@ -198,20 +199,26 @@ where
         self.unhandled_event = Box::new(handler);
         self
     }
+}
 
+impl<St, E> CanHandle<AnyRequest> for Router<St, E> {
     /// Returns `true` if this router has a handler for the given request.
-    pub fn handles_request(&self, request: &AnyRequest) -> bool {
-        self.req_handlers.contains_key(&request.method.as_str())
+    fn can_handle(&self, req: &AnyRequest) -> bool {
+        self.req_handlers.contains_key(&req.method.as_str())
     }
+}
 
+impl<St, E> CanHandle<AnyNotification> for Router<St, E> {
     /// Returns `true` if this router has a handler for the given notification.
-    pub fn handles_notification(&self, notification: &AnyNotification) -> bool {
+    fn can_handle(&self, notification: &AnyNotification) -> bool {
         self.notif_handlers
             .contains_key(&notification.method.as_str())
     }
+}
 
+impl<St, E> CanHandle<AnyEvent> for Router<St, E> {
     /// Returns `true` if this router has a handler for the given event.
-    pub fn handles_event(&self, event: &AnyEvent) -> bool {
+    fn can_handle(&self, event: &AnyEvent) -> bool {
         self.event_handlers.contains_key(&event.inner_type_id())
     }
 }
