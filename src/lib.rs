@@ -350,6 +350,14 @@ pub struct AnyRequest {
     pub params: serde_json::Value,
 }
 
+impl AnyRequest {
+    /// Create a new request with the given id, method and params.
+    #[must_use]
+    pub fn stub(id: RequestId, method: String, params: JsonValue) -> Self {
+        Self { id, method, params }
+    }
+}
+
 /// A dynamic runtime [LSP notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
@@ -360,6 +368,14 @@ pub struct AnyNotification {
     #[serde(default)]
     #[serde(skip_serializing_if = "serde_json::Value::is_null")]
     pub params: JsonValue,
+}
+
+impl AnyNotification {
+    /// Create a new notification with the given method and params.
+    #[must_use]
+    pub fn stub(method: String, params: JsonValue) -> Self {
+        Self { method, params }
+    }
 }
 
 /// A dynamic runtime response.
