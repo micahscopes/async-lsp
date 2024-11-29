@@ -813,7 +813,11 @@ impl AnyEvent {
     }
 
     #[must_use]
-    fn inner_type_id(&self) -> TypeId {
+    /// Returns the `TypeId` of the inner value.
+    ///
+    /// This method allows you to obtain the `TypeId` of the inner value stored in the `AnyEvent`.
+    /// It can be useful for type checking and debugging purposes.
+    pub fn inner_type_id(&self) -> TypeId {
         // Call `type_id` on the inner `dyn Any`, not `Box<_> as Any` or `&Box<_> as Any`.
         Any::type_id(&*self.inner)
     }
